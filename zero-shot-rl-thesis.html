@@ -1,0 +1,138 @@
+---
+layout: thesis
+title: Lauriane Teyssier
+---
+
+<div class="section-container">
+  <!-- Title Section -->
+  <section class="section" id="thesis-title">
+    <div class="full-width center-align">
+      <div class="section-heading animated">An Enhanced Framework for Zero-Shot Reinforcement Learning</div>
+      <div class="paragraph-text center-align">
+        <strong>Lauriane Teyssier</strong> &nbsp;|&nbsp; Advisor: Zhang Ya-Qin
+      </div>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/Tsinghua_University-Logo.png" alt="Thesis cover or key figure" style="max-width:500px;">
+      </div>
+      <div class="paragraph-text center-align">
+        <strong>Zero-shot RL</strong> aims to build agents that, after exploring an environment without any specific goal, can instantly solve new tasks. This thesis introduces a new algorithmic framework that improves performance, generalization, and computational efficiency in this challenging setting.
+      </div>
+    </div>
+  </section>
+
+    <!-- Introduction -->
+  <section class="section" id="introduction-rl">
+    <div class="full-width">
+      <div class="section-heading">Introduction: What is Reinforcement Learning?</div>
+      <div class="paragraph-text justify-text">
+        Reinforcement Learning is about learning how to make a sequence of decisions by interacting with an environment, where an agent seeks to maximize cumulative rewards through trial and error, without explicit instructions or labeled examples—balancing exploration of new actions with exploitation of known strategies to achieve the best long-term outcomes. </div>
+      <ul class="paragraph-text">
+        <li><strong>Why is this important?</strong>
+          Reinforcement learning provides a framework for training agents to make complex decisions autonomously, enabling breakthroughs in fields like robotics, game playing, resource management, and autonomous vehicles. By learning from experience, RL agents can discover effective strategies that are difficult or impossible to program manually.</li>
+        <li><strong>Why is it hard?</strong>
+          RL agents must learn optimal behavior through trial and error, often with limited feedback and in environments that may be large, complex, or unpredictable. Balancing exploration of new actions with exploitation of known strategies, dealing with delayed rewards, and ensuring stable and efficient learning all present significant challenges.</li>
+      </ul>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/rl-description.png" alt="Zero-Shot RL Illustration" style="max-width:500px;">
+        <div class="slightly-smaller-text">Agent interaction with the environment</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Introduction -->
+  <section class="section" id="introduction-zsrl">
+    <div class="full-width">
+      <div class="section-heading">Introduction: What is Zero-Shot RL?</div>
+      <div class="paragraph-text justify-text">
+        Zero-shot RL is about designing agents that, after a reward-free exploration phase, can immediately perform well on any new task. Imagine a robot that learns to move around a room without instructions, then is suddenly asked to fetch an object or avoid obstacles—and succeeds on the first try.
+      </div>
+      <ul class="paragraph-text">
+        <li><strong>Why is this important?</strong> It saves computing power and enables robust, flexible AI for real-world applications.</li>
+        <li><strong>Why is it hard?</strong> Most RL methods overfit to training tasks and struggle with new, unseen objectives or environments.</li>
+      </ul>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/zero-shot-illustration.png" alt="Zero-Shot RL Illustration" style="max-width:500px;">
+        <div class="slightly-smaller-text">Agent generalizing to new tasks</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="section" id="problem">
+    <div class="full-width">
+      <div class="section-heading">Gap in current literature</div>
+      <div class="paragraph-text justify-text">
+        <strong>Successor Measure:</strong> Imagine keeping track of how often you expect to visit each place in the future, starting from now. This "future visit count" helps the agent decide what to do for any new reward.<br><br>
+        <strong>Forward-Backward Representation:</strong> Two maps: one predicting where you'll go, one tracing where you came from. Combining these helps the agent understand the environment, but the math can get tricky.
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Contributions -->
+  <section class="section" id="contributions">
+    <div class="full-width">
+      <div class="section-heading">Main Contributions</div>
+      <ul class="paragraph-text">
+        <li><strong>Enhanced FB Algorithm:</strong> Improves expressivity and robustness with new neural architectures and regularization.</li>
+        <li><strong>Neural Network Upgrades:</strong> Uses transformers for better modeling of complex relationships.</li>
+        <li><strong>Robustness to Distribution Shift:</strong> Expectile regression for more stable learning.</li>
+        <li><strong>Efficiency:</strong> Training time reduced from 17h to 11h on a single GPU.</li>
+      </ul>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/new_architecture.png" alt="Contributions Overview" style="max-width:500px;">
+        <div class="slightly-smaller-text">Schematic description of the new neural network</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experiments -->
+  <section class="section" id="experiments">
+    <div class="full-width">
+      <div class="section-heading">Experiments & Results</div>
+      <ul class="paragraph-text">
+        <li><strong>Benchmarks:</strong> DeepMind Control Suite (Quadruped, Point Mass Maze, Walker)</li>
+        <li><strong>Metrics:</strong> IQM (Interquartile Mean) for robust comparison.</li>
+        <li><strong>Findings:</strong> 9%–34% improvement over previous state-of-the-art, faster training, better generalization.</li>
+        <li><strong>Variability:</strong> No single model wins everywhere—trade-offs exist between performance and data efficiency.</li>
+      </ul>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/results_global.png" alt="Results Graph" style="max-width:500px;">
+        <div class="slightly-smaller-text">Performance graphs</div>
+      </div>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/ablation_big_3.png" alt="Ablation Studies" style="max-width:500px;">
+        <div class="slightly-smaller-text">Ablation study results</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conclusion -->
+  <section class="section" id="conclusion">
+    <div class="full-width">
+      <div class="section-heading">Conclusion & Perspectives</div>
+      <div class="paragraph-text justify-text">
+        This thesis advances zero-shot RL with a more expressive, robust, and efficient framework.
+        While progress is significant, challenges remain in scaling to even more diverse tasks and improving robustness to low-quality data.
+      </div>
+      <div class="paragraph-text justify-text">
+        For more technical details, please refer to the full thesis report and presentation slides linked below.
+      </div>
+        <!-- Download -->
+      <div class="extra-links">
+            <span class="hint--bottom bottom-link" aria-label="Download Thesis Report">
+                <a href="/assets/thesis.pdf" download>
+                    <i class="head-icon fas fa-file-pdf"></i>
+                </a>
+            </span>
+            <span class="hint--bottom bottom-link" aria-label="Download Thesis Presentation">
+                <a href="/assets/thesis_presentation.pptx" download>
+                    <i class="head-icon fas fa-file-pdf"></i>
+                </a>
+            </span>
+      </div>
+    </div>
+  </section>
+
+
+  </section>
+</div>

@@ -38,6 +38,8 @@ img {
   font-size: 3.5rem;
   font-family: 'PT Sans', Arial, Helvetica, sans-serif;
   font-weight: bold;
+  width: 100%;
+  text-align: center;
 }
 
 .animated {
@@ -164,8 +166,8 @@ img {
 
 .section {
   max-width: 768px;
-  margin: 60px auto;
-  padding: 20px 0;
+  margin: 0 auto;
+  padding: 80px 0;
   min-height: 100vh;
 
   display: -webkit-box;
@@ -268,7 +270,6 @@ img {
 }
 
 .footer {
-  background-color: #444;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -279,10 +280,8 @@ img {
       -ms-flex-align: center;
           align-items: center;
   min-height: 35px;
-  color: #fff;
   font-family: 'PT Sans', Arial, Helvetica, sans-serif;
 
-  background: url(../images/background.png);
   background-repeat: repeat;
   background-attachment: fixed;
 }
@@ -381,9 +380,10 @@ img {
 
 .profile-pic {
   border-radius: 50%;
-  width: 170px;
-  height: 170px;
+  width: 270px;
+  height: 270px;
   border: solid 2px white;
+
 }
 
 .profile-pic:hover {
@@ -578,4 +578,36 @@ a {
   .head-menu-wrap {
     bottom: 15px;
   }
+}
+
+.job-post-card {
+  display: block;
+  background: #f7f8fa; /* matches your .section background */
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(32, 56, 100, 0.08);
+  padding: 32px 24px;
+  margin: 32px 0;
+  text-decoration: none;
+  color: inherit; /* inherit text color from parent */
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.job-post-card:hover {
+  box-shadow: 0 6px 24px rgba(32, 56, 100, 0.15);
+}
+
+.job-post-title {
+  composes: section-heading from global; /* if using CSS Modules, otherwise: */
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+/* Use your paragraph-text and accent color for author */
+.job-post-author {
+  composes: paragraph-text from global;
+  font-size: 1.05rem;
+  color: #7030A0;
+  margin-bottom: 12px;
 }

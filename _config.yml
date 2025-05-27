@@ -1,21 +1,15 @@
-title: Abhishek Nagekar
-description: Web & Security Engineer
-site_title: '@abhn - Abhishek Nagekar'
+title: Lauriane Teyssier
+description: AI Scientist, MS in Data Science @ Université Paris-Saclay, MS in AI @ Tsinghua University
+site_title: 'Lauriane Teyssier'
 
 # Build settings
 markdown: kramdown
 exclude: [vendor/ruby]
 
 # Personalization
-github_username: abhn
-blog_url: https://www.nagekar.com
-email: abhishek@nagekar.com
-keybase_username: abhn
-twitter_username: abhn_
-reddit_username: abhn
+github_username: arwen-c
+email: lauriane.teyssier@gmail.com
+keybase_username: arwen_c
 
 # absolute or relative
-profile_picture: assets/images/pp.jpg
-
-# Google Analytics ID
-google_analytics: 
+profile_picture: assets/images/pp_lolo.png

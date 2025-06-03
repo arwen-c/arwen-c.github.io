@@ -611,3 +611,32 @@ a {
   color: #7030A0;
   margin-bottom: 12px;
 }
+
+.img {
+  width: 500px;
+}
+
+.img-wide {
+  width: 700px;
+}
+
+@media screen and (max-width: 500px) {
+  .img {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .img-wide {
+    width: 100%;
+  }
+}
+
+mjx-math {
+}
+
+mjx-container[jax="CHTML"][display="true"] mjx-math {
+  max-width: 100%;
+  overflow-x: scroll;
+}
+

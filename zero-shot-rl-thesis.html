@@ -12,10 +12,14 @@ title: Lauriane Teyssier
         <strong>Lauriane Teyssier</strong> &nbsp;|&nbsp; Advisor: Zhang Ya-Qin
       </div>
       <div class="center-align" style="margin: 30px 0;">
-        <img src="/assets/images/Tsinghua_University-Logo.png" alt="Thesis cover or key figure" style="max-width:500px;">
+        <img src="/assets/images/Tsinghua_University-Logo.png" alt="Thesis cover or key figure" id="img-tsinghua-logo">
       </div>
       <div class="paragraph-text center-align">
-        <strong>Zero-shot RL</strong> aims to build agents that, after exploring an environment without any specific goal, can instantly solve new tasks. This thesis introduces a new algorithmic framework that improves performance, generalization, and computational efficiency in this challenging setting.
+        <strong>Zero-shot RL</strong> aims to build reinforcement learning decision-making agents that,
+        after exploring an environment without any specific goal, can instantly solve new tasks.
+        This project, my master thesis, introduces a new algorithmic framework that improves <strong>performance by up to 30%</strong>,
+         generalization, and <strong>computational efficiency by 50%</strong> in this challenging setting.
+        I'll explain here step by step the thesis problem and proposed contributions.
       </div>
     </div>
   </section>
@@ -23,18 +27,56 @@ title: Lauriane Teyssier
     <!-- Introduction -->
   <section class="section" id="introduction-rl">
     <div class="full-width">
-      <div class="section-heading">Introduction: What is Reinforcement Learning?</div>
+      <div class="section-heading">An Introduction to Reinforcement Learning</div>
       <div class="paragraph-text justify-text">
-        Reinforcement Learning is about learning how to make a sequence of decisions by interacting with an environment, where an agent seeks to maximize cumulative rewards through trial and error, without explicit instructions or labeled examples—balancing exploration of new actions with exploitation of known strategies to achieve the best long-term outcomes. </div>
-      <ul class="paragraph-text">
-        <li><strong>Why is this important?</strong>
-          Reinforcement learning provides a framework for training agents to make complex decisions autonomously, enabling breakthroughs in fields like robotics, game playing, resource management, and autonomous vehicles. By learning from experience, RL agents can discover effective strategies that are difficult or impossible to program manually.</li>
-        <li><strong>Why is it hard?</strong>
-          RL agents must learn optimal behavior through trial and error, often with limited feedback and in environments that may be large, complex, or unpredictable. Balancing exploration of new actions with exploitation of known strategies, dealing with delayed rewards, and ensuring stable and efficient learning all present significant challenges.</li>
+        Reinforcement Learning is about learning by trial and error—just like humans do.
+        An agent tries different actions in an environment
+        and learns over time which decisions lead to the best results or rewards.
+</div>
+    <ul class="paragraph-text">
+    <li><strong>Applications:</strong> RL is widely used across several domains:
+      <ul>
+        <li><strong>Robotics:</strong> For learning motor control and adaptive behaviors.</li>
+        <li><strong>Autonomous Driving:</strong> To train vehicles to navigate complex environments safely.</li>
+        <li><strong>Games:</strong> Deep Blue (chess, 1997) and AlphaGo (Go, 2016) outperform world champions.</li>
+        <li><strong>Large Language Models (LLMs):</strong> Used to improve reasoning (e.g., DeepSeek) and align outputs to human preferences and values.</li>
       </ul>
+    </li>
+  <li><strong>Advantages:</strong> RL allows agents to learn through trial and error by interacting with their environment.
+    It can uncover effective strategies
+    that are too complex to be hand-coded and often exceeds dataset-based approaches by discovering better actions.</li>
+</ul>
+
+    <div class="paragraph-text justify-text" style="margin-top: 20px;">
+      Reinforcement Learning pioneers Richard Sutton and Andrew Barto received the 2024 Turing Award.
+    </div>
       <div class="center-align" style="margin: 30px 0;">
-        <img src="/assets/images/rl-description.png" alt="Zero-Shot RL Illustration" style="max-width:500px;">
+        <img src="/assets/images/rl-description.png" alt="Zero-Shot RL Illustration" class="img">
         <div class="slightly-smaller-text">Agent interaction with the environment</div>
+      </div>
+      <div class="paragraph-text justify-text" style="margin-top: 20px;">
+        Formally, we train an agent to maximize the expected (discounted) reward Q. For a state s, and action a:
+        <div style="margin-top: 15px;">
+          $$
+          Q(s, a) = \mathrm{E} \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]
+          $$
+        </div>
+        with \(\gamma\)
+        a discount factor
+        to account that future rewards are more uncertain and less profitable than present ones,
+        and R the reward.
+        We then find the best next action function (the policy) \(\pi^*(s)\)
+        by taking the one that maximizes the expected reward:
+        <div style="margin-top: 15px;">
+          $$
+          \pi(s) = \mathrm{argmax}_a Q(s, a)
+          $$
+        </div>
+        <strong>RL Challenges:</strong>
+        RL is hard to scale—training requires heavy compute and simulations,
+         in the contrary to other machine learning fields that scales with large datasets.
+         Each new task typically requires training from scratch, limiting generalization and broader adoption.
+      <div class="paragraph-text justify-text"> A general and data-efficient RL system would dramatically reduce environmental and financial costs, enabling broader adoption of decision-making agents. </div>
       </div>
     </div>
   </section>
@@ -42,46 +84,237 @@ title: Lauriane Teyssier
   <!-- Introduction -->
   <section class="section" id="introduction-zsrl">
     <div class="full-width">
-      <div class="section-heading">Introduction: What is Zero-Shot RL?</div>
+      <div class="section-heading">The Zero-Shot RL Problem</div>
       <div class="paragraph-text justify-text">
-        Zero-shot RL is about designing agents that, after a reward-free exploration phase, can immediately perform well on any new task. Imagine a robot that learns to move around a room without instructions, then is suddenly asked to fetch an object or avoid obstacles—and succeeds on the first try.
+        The RL community is working toward building agents that can <em>generalize</em> across tasks—that is, agents that can learn to act optimally for any reward function, without needing to be retrained for each one.
+        At the same time, there's a growing focus on how to <em>leverage datasets</em> to improve performance as more data becomes available, reducing reliance on costly simulated environments.
+        The challenge of creating flexible agents trained from datasets is known as <em>Zero-Shot Reinforcement Learning</em>.
+
+        <strong>Solving the Zero-Shot RL Problem:</strong><br>
+        Instead of teaching the agent which actions to take for a specific reward during training,
+        we focus on helping it understand how the environment works.
+        At inference time, the agent combines this knowledge with the reward function to compute the best strategy.
+        Imagine a robot that freely explores a room without instructions,
+        and then—on its first try—is able to fetch an object or avoid obstacles when asked.
       </div>
-      <ul class="paragraph-text">
-        <li><strong>Why is this important?</strong> It saves computing power and enables robust, flexible AI for real-world applications.</li>
-        <li><strong>Why is it hard?</strong> Most RL methods overfit to training tasks and struggle with new, unseen objectives or environments.</li>
-      </ul>
       <div class="center-align" style="margin: 30px 0;">
-        <img src="/assets/images/zero-shot-illustration.png" alt="Zero-Shot RL Illustration" style="max-width:500px;">
+        <img src="/assets/images/zero-shot-illustration.png" alt="Zero-Shot RL Illustration" class="img">
         <div class="slightly-smaller-text">Agent generalizing to new tasks</div>
       </div>
+      <div class="paragraph-text justify-text">
+          <strong>Current Methods Limitations:</strong>
+          <ul>
+            <li><strong>Low performance</strong> — especially when methods rely on human-designed assumptions</li>
+            <li><strong>Poor generalization</strong> — current solutions only work in simple environments with high-quality data</li>
+            <li><strong>High computational cost</strong> — most approaches are resource-intensive</li>
+          </ul>
+          <br>
+          <strong>Our Goal:</strong><br>
+          Address all three challenges by building on a current state of the art, FB Representations,
+        and developing a method that improves performance,
+        reduces computational time, generalizes more effectively across diverse tasks.
+      </div>
+
     </div>
   </section>
 
-  <!-- Problem -->
-  <section class="section" id="problem">
+    <!-- FB Presentation -->
+  <section class="section" id="basis">
     <div class="full-width">
-      <div class="section-heading">Gap in current literature</div>
+      <div class="section-heading">State-Of-The-Art: Forward-Backward Representations</div>
       <div class="paragraph-text justify-text">
-        <strong>Successor Measure:</strong> Imagine keeping track of how often you expect to visit each place in the future, starting from now. This "future visit count" helps the agent decide what to do for any new reward.<br><br>
-        <strong>Forward-Backward Representation:</strong> Two maps: one predicting where you'll go, one tracing where you came from. Combining these helps the agent understand the environment, but the math can get tricky.
+        <strong>Forward-Backward Representations:</strong>
+        Instead of directly learning the expected discounted reward Q,
+        the FB Representation approach focuses on learning the expected discounted state-action visitation probabilities M,
+        which are less dependent on the reward.
+        These two quantities are related by: \(Q = M \cdot R\).
+        To learn M, we use its Bellman equation—similar to Q-learning—describing how the visitation probabilities evolve:
+        \[
+        M^{\pi} =
+        \underbrace{P}_{\text{Direct transitions from } (s,a)}
+        +
+        \underbrace{\gamma P_{\pi} M^{\pi}}_{\text{Future transitions arriving at } (s,a) \text{ from others}}
+        \]
+        Here, \(P\) represents the transition probabilities and \(\gamma\) the discount factor.
+        We turn this Bellman consistency into a learning objective:
+        <div style="margin-top: 15px;">
+          \[ \mathcal{L}(M) = \mathbb{E} \left[ \left\| M^{\pi}(s_0, a_0, ds, da) - P + \gamma P_{\pi} M^{\pi}(s, a) \right\|^2 \right] \]
+        </div>
+        However, learning M directly is too difficult (intractable) due to its complexity.
+        To simplify, we use a low-rank decomposition:
+        Using this equation solely is not enough to learn M, as M is too complex to be learned directly.
+        <div style="margin-top: 15px;">
+         \[M^{\pi^z}(s_0, a_0, ds, da) = F(s_0, a_0, z)^{\top} B(s, a)\].
+        </div>
+        Here, \(z\)
+        is a latent representation of the reward function—meaning it’s a compact,
+        hidden encoding of the reward that the model can use as input to the function F,
+        and later to compute the final policy.
+        It is computed as: <div style="margin-top: 15px;"> \[ z_r = \mathbb{E}_{s \sim \rho}[r(s) B(s)] \]</div>
+        In this formulation, \(B(s, a)\) captures environment dynamics (the next-state/action dependency of M),
+        and \(F(s_0, a_0, z)\) encodes the initial state-action and task embedding.
+        The new objective with this decomposition becomes:
+         <div style="margin-top: 15px;">
+           $$
+           \begin{aligned}
+            \mathrm{L}(F, B) = & \|F_z^{\top} B\rho - (P + \gamma P_{\pi_z} F_z^{\top} B\rho)\|_{\rho}^2\\
+          = & \mathrm{E}_{(s_t,a_t,s_{t+1})\sim\rho, s'\sim\rho}\left[\left(F(s_t, a_t, z)^{\top}B(s') - \gamma \bar{F}(s_{t+1}, \pi_z(s_{t+1}), z)^{\top}\bar{B}(s')\right)^2\right]\\
+          &   - 2\mathrm{E}_{(s_t,a_t,s_{t+1})\sim\rho}\left[F(s_t, a_t, z)^{\top}B(s_{t+1})\right] + \text{Const}\\
+           \end{aligned}
+           $$
+         </div>
+        Finally, the optimal policy is obtained by selecting the action that maximizes the expected reward:
+        <div style="margin-top: 15px;">
+          $$
+          \begin{aligned}
+          \pi^R(s) = & \mathrm{argmax}_a Q(s, a) \\
+          = & \mathrm{argmax}_a \sum_{s_0, a_0} M^R(s_0, a_0, s, a) \cdot R(s,a) \\
+          = & \mathrm{argmax}_a \sum_{s_0, a_0} F(s_0, a_0, z_R)^{\top} B(s, a) \cdot R(s,a)
+          \end{aligned}
+          $$
+        </div>
+      Main issues with existing the FB learning methods:
+      <ul class="paragraph-text">
+          <li><strong>Performance:</strong> The original model uses simple MLP architectures of 3 layers maximum. These are not powerful enough to handle complex patterns. Moreover, simply increasing the size of the networks (i.e., adding more parameters) does not lead to better performance. In fact, it makes training harder without effectively capturing the more complex patterns found in richer datasets or more difficult problems.</li>
+          <li><strong>Distributional Shift:</strong> If the dataset does not include the action \(\pi(s_{t+1})\), the algorithm receives no feedback to correct its prediction at that point. As a result, it may assign unrealistic values to \(\pi(s_{t+1})\), which leads to biased training.</li>
+      </ul>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/fb_limitations.png" alt="FB limitations underlined on the loss" class="img-wide">
+        <div class="slightly-smaller-text">FB limitations</div>
       </div>
     </div>
+  </div>
   </section>
 
   <!-- Main Contributions -->
   <section class="section" id="contributions">
     <div class="full-width">
-      <div class="section-heading">Main Contributions</div>
-      <ul class="paragraph-text">
-        <li><strong>Enhanced FB Algorithm:</strong> Improves expressivity and robustness with new neural architectures and regularization.</li>
-        <li><strong>Neural Network Upgrades:</strong> Uses transformers for better modeling of complex relationships.</li>
-        <li><strong>Robustness to Distribution Shift:</strong> Expectile regression for more stable learning.</li>
-        <li><strong>Efficiency:</strong> Training time reduced from 17h to 11h on a single GPU.</li>
-      </ul>
-      <div class="center-align" style="margin: 30px 0;">
-        <img src="/assets/images/new_architecture.png" alt="Contributions Overview" style="max-width:500px;">
-        <div class="slightly-smaller-text">Schematic description of the new neural network</div>
+      <div class="section-heading">Summary of Our Contributions</div>
+      <div class="paragraph-text justify-text">
+        <strong>To address the limitations of the current FB method, we introduce a series of improvements targeting both algorithm design and training efficiency:</strong>
+        <ul class="paragraph-text">
+          <li><strong>Better FB Algorithm:</strong> We improve the learning process by adding a regularization term, which makes learning more stable and generalizable.</li>
+          <li><strong>Upgraded Neural Networks:</strong> We replace basic MLPs with transformers, which are better at capturing complex relationships in the data.</li>
+          <li><strong>Faster Training:</strong> Thanks to these changes and code optimizations, we reduce training time from 17 hours to just 11 hours on a single A8000 GPU.</li>
+        </ul>
       </div>
+    </div>
+  </section>
+
+        <!-- Main Contributions -->
+  <section class="section" id="contributions-nn">
+    <div class="full-width">
+      <div class="section-heading">Our Neural Network Improvements</div>
+      <div class="paragraph-text justify-text">
+        Switching from MLPs to Transformers offers several advantages:
+         <ul class="paragraph-text">
+           <li><strong>Understanding sequential relationships:</strong> For learning the function \(B\), which captures how actions follow states, the task is similar to understanding word order in a sentence—something transformers excel at thanks to their success in natural language processing.</li>
+           <li><strong>Flexible input interactions via attention:</strong> The function \(F\) takes action, observation, and reward representation (\(z\)) as input. Attention layers allow the model to learn complex interactions between these inputs.</li>
+           <li><strong>Improved generalization:</strong> Transformers have been shown to generalize better than MLPs, especially in settings with high complexity or rich data distributions.</li>
+           <li><strong>Future-proof architecture:</strong> Transformers are a highly active area of research, with ongoing work focused on reducing their computational cost. By adopting this architecture, our model can easily benefit from future improvements in transformer efficiency and scalability.</li>
+         </ul>
+      </div>
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/nn_contribution.png" alt="Neural Network Changes Schematic Description" class="img">
+        <div class="slightly-smaller-text">Schematic description of the neural network changes</div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Main Contributions -->
+  <section class="section" id="contributions-algo">
+    <div class="full-width">
+      <div class="section-heading">Our Regularization Scheme</div>
+      <div class="paragraph-text justify-text">
+        To make training more stable, we introduce a <strong>regularization technique</strong> that helps avoid learning from states that might be <strong>overestimated</strong>.
+        <br><br>
+        Instead of directly using the potentially inaccurate term
+        \(F(s_{t+1}, \pi(s_{t+1}), z)\), we introduce a new variable \(O\), defined as:
+        \(O(s, z) \cdot z = \max_a [F(s, a, z)^T z]\).
+        This acts as a <strong>safe substitute</strong>, replicating the behavior of \(F\) while avoiding its overestimations.
+
+        <br><br>
+        But how do we learn this new variable \(O\)? We want it to behave like \(F\), but only where \(F\) isn’t overconfident. So we train \(O\) to match only the <strong>lower 70%</strong> of \(F\)’s outputs, ignoring the potentially overestimated top 30%.
+
+        <br><br>
+        This training method is called <strong>expectile regression</strong>: instead of learning to copy the average output, the model learns to match a <em>target percentile</em> of another model’s values.
+
+        <br><br>
+        Once trained, using \(O\) in place of \(F\) in the loss function helps us avoid instability and leads to more robust learning.
+      </div>
+<!--      <div class="paragraph-text justify-text">-->
+<!--      The idea of our regularization is-->
+<!--        to try avoiding using during our training any state that could be overestimated,-->
+<!--        so any state whose \(\pi_z(s) = \arg\max_a F(s, a, z)^{\top}z_r\) is not in the dataset.-->
+<!--        To do so,-->
+<!--        we are going to replace the problematic term \(F(s_{t+1}, \pi (s_{t+1}), z)\)-->
+<!--        by a new variable \(O\): \(O(s, z) \cdot z = \max_a [F(s, a, z)^T z]\) (substitute step).-->
+<!--        We will try to learn this new variable to replicate F "true" behavior, i.e., without overestimations.-->
+<!--        Replacing the problematic term with O in the loss function would then lead to more stable training-->
+<!--        (updated FB loss step).-->
+<!--        But how to learn O?-->
+<!--        Well, we want O to mimic F behavior, without the F overestimation.-->
+<!--        To learn F low values, without the high estimated ones,-->
+<!--        we choose to learn O to be as good as 70% of F performance,-->
+<!--        leaving the overestimated 30% having no influence.-->
+<!--        Learning O as a percentage of something else is called "expectile regression,"-->
+<!--        and the associated mathematical expression can be found in the "learn new variable using expectile regression"-->
+<!--        step.-->
+<!--      </div>-->
+      <div class="center-align" style="margin: 30px 0;">
+        <img src="/assets/images/regularization_equations.png" alt="Regularization explanation" class="img">
+        <div class="slightly-smaller-text">Our regularization scheme step by step</div>
+      </div>
+    </div>
+  </section>
+
+      <!-- Main Contributions -->
+  <section class="section" id="contributions-speed">
+    <div class="full-width">
+      <div class="section-heading">Our Computation Speed Improvements</div>
+      <div class="paragraph-text justify-text"> </div>
+      <div class="paragraph-text justify-text" style="margin-top: 20px;">
+        We applied several optimizations to make training faster without hurting performance.
+        By profiling the code, we found and fixed slow parts.
+        We used <code>bfloat16</code> precision (where possible) to speed up training, and enabled <code>torch.compile</code> to optimize runtime execution.
+        On supported GPUs, we used <code>TF32</code> for fast matrix operations with minimal accuracy loss.
+        These changes brought up to <strong>10× speed improvements</strong>, depending on the setup.
+
+        <div class="center-align" style="margin-top: 20px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="border: 1px solid #ddd; padding: 8px;"><strong>Optimization</strong></th>
+                <th style="border: 1px solid #ddd; padding: 8px;"><strong>Speedup</strong></th>
+                <th style="border: 1px solid #ddd; padding: 8px;"><strong>Notes</strong></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">Baseline</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">1×</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">Standard training, no optimization</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><code>torch.compile</code></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">2×</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">Just-in-time model graph optimization</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">TF32 Matrix Ops</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">5×</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">Fast GPU matrix multiplications</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><code>bfloat16</code></td>
+                <td style="border: 1px solid #ddd; padding: 8px;">10×</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">Faster training, used without regularization</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+</div>
+
     </div>
   </section>
 
@@ -91,16 +324,14 @@ title: Lauriane Teyssier
       <div class="section-heading">Experiments & Results</div>
       <ul class="paragraph-text">
         <li><strong>Benchmarks:</strong> DeepMind Control Suite (Quadruped, Point Mass Maze, Walker)</li>
-        <li><strong>Metrics:</strong> IQM (Interquartile Mean) for robust comparison.</li>
-        <li><strong>Findings:</strong> 9%–34% improvement over previous state-of-the-art, faster training, better generalization.</li>
-        <li><strong>Variability:</strong> No single model wins everywhere—trade-offs exist between performance and data efficiency.</li>
+        <li><strong>Findings:</strong> 9%–34% IQM (Interquartile Mean) improvement over previous state-of-the-art, faster training, better generalization.</li>
       </ul>
       <div class="center-align" style="margin: 30px 0;">
-        <img src="/assets/images/results_global.png" alt="Results Graph" style="max-width:500px;">
+        <img src="/assets/images/results_global.png" alt="Results Graph" class="img">
         <div class="slightly-smaller-text">Performance graphs</div>
       </div>
       <div class="center-align" style="margin: 30px 0;">
-        <img src="/assets/images/ablation_big_3.png" alt="Ablation Studies" style="max-width:500px;">
+        <img src="/assets/images/ablation_big_3.png" alt="Ablation Studies" class="img">
         <div class="slightly-smaller-text">Ablation study results</div>
       </div>
     </div>
@@ -115,7 +346,7 @@ title: Lauriane Teyssier
         While progress is significant, challenges remain in scaling to even more diverse tasks and improving robustness to low-quality data.
       </div>
       <div class="paragraph-text justify-text">
-        For more technical details, please refer to the full thesis report and presentation slides linked below.
+        For more technical details, please refer to the full thesis report linked below.
       </div>
         <!-- Download -->
       <div class="extra-links">
@@ -124,15 +355,13 @@ title: Lauriane Teyssier
                     <i class="head-icon fas fa-file-pdf"></i>
                 </a>
             </span>
-            <span class="hint--bottom bottom-link" aria-label="Download Thesis Presentation">
-                <a href="/assets/thesis_presentation.pptx" download>
-                    <i class="head-icon fas fa-file-pdf"></i>
-                </a>
-            </span>
+<!--            <span class="hint&#45;&#45;bottom bottom-link" aria-label="Download Thesis Presentation">-->
+<!--                <a href="/assets/thesis_presentation.pptx" download>-->
+<!--                    <i class="head-icon fas fa-file-pdf"></i>-->
+<!--                </a>-->
+<!--            </span>-->
       </div>
     </div>
   </section>
 
-
-  </section>
 </div>
